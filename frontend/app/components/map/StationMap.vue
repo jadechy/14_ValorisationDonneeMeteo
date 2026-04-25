@@ -1,35 +1,38 @@
 <template>
-    <div class="relative">
-        <div
-            ref="mapContainer"
-            class="w-full rounded-lg overflow-hidden"
-            style="height: 480px"
-        />
-        <div
-            class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
-        >
-            <span class="text-xs" :style="{ color: COLORS.foreground }">{{
-                legendLabel
-            }}</span>
+    <div>
+        <div class="relative">
             <div
-                class="rounded-full"
-                :style="{
-                    width: '160px',
-                    height: '12px',
-                    background: `linear-gradient(to right, ${legendGradient})`,
-                }"
+                ref="mapContainer"
+                class="w-full rounded-lg overflow-hidden"
+                style="height: 480px"
             />
             <div
-                class="flex justify-between w-full text-xs"
-                :style="{ color: COLORS.foreground }"
+                class="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
             >
-                <span>{{ colorConfig.min }}°C</span>
-                <span
-                    >{{ colorConfig.max > 0 ? "+" : ""
-                    }}{{ colorConfig.max }}°C</span
+                <span class="text-xs" :style="{ color: COLORS.foreground }">{{
+                    legendLabel
+                }}</span>
+                <div
+                    class="rounded-full"
+                    :style="{
+                        width: '160px',
+                        height: '12px',
+                        background: `linear-gradient(to right, ${legendGradient})`,
+                    }"
+                />
+                <div
+                    class="flex justify-between w-full text-xs"
+                    :style="{ color: COLORS.foreground }"
                 >
+                    <span>{{ colorConfig.min }}°C</span>
+                    <span
+                        >{{ colorConfig.max > 0 ? "+" : ""
+                        }}{{ colorConfig.max }}°C</span
+                    >
+                </div>
             </div>
         </div>
+        <MapAttribution class="mt-2" />
     </div>
 </template>
 
@@ -202,6 +205,45 @@ onMounted(async () => {
         interactive: true,
     });
 
+    map.addControl(
+        new maplibregl.NavigationControl({ showCompass: false }),
+        "top-right",
+    );
+
+    map.addControl(
+        {
+            onAdd(m) {
+                const el = document.createElement("div");
+                el.className = "maplibregl-ctrl maplibregl-ctrl-group";
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.title = "Réinitialiser la vue";
+                btn.setAttribute("aria-label", "Réinitialiser la vue");
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="29" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 7V3h4M17 7V3h-4M3 13v4h4M17 13v4h-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                btn.onclick = () =>
+                    m.fitBounds(
+                        [
+                            [-5.2, 41.3],
+                            [9.6, 51.1],
+                        ],
+                        {
+                            padding: {
+                                top: 50,
+                                right: 50,
+                                bottom: 50,
+                                left: 40,
+                            },
+                            duration: 500,
+                        },
+                    );
+                el.appendChild(btn);
+                return el;
+            },
+            onRemove() {},
+        },
+        "top-right",
+    );
+
     map.once("load", () => {
         map!.resize();
         map!.fitBounds(
@@ -209,7 +251,10 @@ onMounted(async () => {
                 [-5.2, 41.3],
                 [9.6, 51.1],
             ],
-            { padding: 40, duration: 0 },
+            {
+                padding: { top: -10, right: 50, bottom: 50, left: 40 },
+                duration: 0,
+            },
         );
     });
 
