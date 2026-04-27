@@ -1,0 +1,72 @@
+# docker-compose.monitoring.yml
+#
+# Étend docker-compose.dev.yml avec Prometheus + Grafana.
+# Lancer avec :
+#   docker compose -f docker-compose.dev.yml -f docker-compose.monitoring.yml up -d
+
+services:
+
+  # ──────────────────────────────────────────
+  # Prometheus — collecte les métriques
+  # UI : http://localhost:9090
+  # ──────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v3.4.0
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    networks:
+      - app_net
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ──────────────────────────────────────────
+  # Grafana — dashboards visuels
+  # UI : http://localhost:3000
+  # Login : admin / admin (à changer en prod)
+  # ──────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:12.0.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      # Provisionning automatique de la datasource Prometheus
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - app_net
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
