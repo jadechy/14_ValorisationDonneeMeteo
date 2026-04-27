@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   # Tout en minuscules — obligatoire pour Docker
-  IMAGE_NAME: jadechy/14_valorisationdonneeMeteo/backend
+  IMAGE_NAME: jadechy/14_valorisationdonneemeteo/backend
 
 jobs:
   # ─────────────────────────────────────────────
