@@ -31,7 +31,8 @@ WORKDIR /app
 COPY --from=builder /app/.output /app/.output
 
 USER node
+ENV PORT=3002
 
-EXPOSE 3000
+EXPOSE 3002
 
 CMD ["node", "/app/.output/server/index.mjs"]
