@@ -1471,7 +1471,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "django", specifier = ">=5.2.12" },
+    { name = "django", specifier = ">=5.2.13" },
     { name = "django-cors-headers", specifier = ">=4.4.0" },
     { name = "django-environ", specifier = ">=0.11.0" },
     { name = "django-extensions", specifier = ">=4.1" },
