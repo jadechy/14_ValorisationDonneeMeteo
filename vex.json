@@ -1,7 +1,7 @@
 {
     "@context": "https://openvex.dev/ns/v0.2.0",
     "@id": "https://github.com/jadechy/14_ValorisationDonneeMeteo/vex-001",
-    "author": "jadechy",
+    "author": "jadechy & cecilelecerf",
     "timestamp": "2026-04-28T00:00:00Z",
     "version": 1,
     "statements": [
