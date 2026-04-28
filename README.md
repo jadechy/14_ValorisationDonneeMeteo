@@ -2,7 +2,7 @@
 
 Projet Data For Good - Saison 14
 
-[![CI/CD Pipeline](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml/badge.svg)](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml)
+[![CI](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml/badge.svg)](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml)
 
 ## Structure du projet
 
@@ -18,22 +18,48 @@ Consultez les README de chaque sous-projet :
 - [Backend](backend/README.md)
 - [Frontend](frontend/README.md)
 
-
 ## CI/CD
 
-Le pipeline CI/CD s'exécute automatiquement à chaque push. Il comprend :
+Le pipeline CI/CD s'exécute automatiquement à chaque push. Il est organisé en deux branches parallèles (frontend et backend) qui convergent vers un gate final.
 
-1. **Tests** — pytest avec TimescaleDB via Docker service
+### Backend
+
+1. **Install** — Installation des dépendances Python avec `uv` (cache activé)
 2. **Lint** — Ruff (linting + format check)
-3. **Security scan** — Trivy (scan CVE de l'image Docker)
-4. **Build & Push** — image Docker publiée sur `ghcr.io` (branche `main` uniquement)
+3. **Tests** — pytest avec TimescaleDB via Docker service
+4. **Docker & Trivy** — Build de l'image DHI + scan CVE bloquant (CRITICAL/HIGH)
+
+### Frontend
+
+1. **Install** — Installation des dépendances Node avec `npm ci` (cache activé)
+2. **Lint & Type check** — ESLint + TypeScript
+3. **Tests** — Tests unitaires (rapport JUnit)
+4. **Docker & Trivy** — Build de l'image DHI + scan CVE bloquant (CRITICAL/HIGH)
+
+### Sécurité & Livraison
+
+- **Trivy filesystem** — Scan du code source du repo (non bloquant, rapport SARIF)
+- **CI Gate** — Vérifie que tous les jobs critiques sont passés avant de valider le pipeline
+- **Push images** — Images Docker publiées sur `ghcr.io` (branche `main` uniquement)
+
+### Images Docker
+
+Les images backend et frontend utilisent des **Docker Hardened Images (DHI)** — des images minimalistes distroless qui réduisent la surface d'attaque de **73%** par rapport aux images officielles classiques.
+
+| Image | CVE avant (classique) | CVE après (DHI) | Réduction |
+|-------|----------------------|-----------------|-----------|
+| Backend (Python) | 154 | 41 | -73% |
 
 ### Rapports disponibles
 
-- Rapport de tests : onglet **Actions → test-report** (artifact)
-- Rapport Trivy JSON : onglet **Actions → trivy-report** (artifact)
-- Rapport Trivy SARIF : onglet **Security → Code scanning**
-- Fichier VEX : [`vex.json`](./vex.json)
+Les artifacts suivants sont disponibles dans chaque run GitHub Actions :
+
+- **backend-test-report** — Rapport JUnit des tests pytest
+- **backend-lint-report** — Rapport Ruff
+- **trivy-backend-image-report** — Rapport Trivy de l'image backend (SARIF + table)
+- **trivy-frontend-image-report** — Rapport Trivy de l'image frontend (SARIF + table)
+- **trivy-fs-report** — Rapport Trivy du code source
+- **[`vex.json`](./vex.json)** — Fichier VEX documentant les CVE analysées et acceptées
 
 ## Contribuer
 
