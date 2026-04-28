@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true }, // false for production
 
+    nitro: {
+        devServer: { port: 3002 }, // pour le dev
+    },
     modules: [
         "@nuxt/eslint",
         "@nuxt/test-utils",

@@ -1,14 +1,8 @@
-# monitoring/prometheus.yml
-#
-# Configuration de Prometheus pour le projet ValorisationDonneeMeteo.
-# Prometheus scrape les métriques de ton backend Django toutes les 15 secondes.
-
 global:
-  scrape_interval: 15s # À quelle fréquence on collecte les métriques
-  evaluation_interval: 15s # À quelle fréquence on évalue les règles d'alerte
+  scrape_interval: 15s
+  evaluation_interval: 15s
   scrape_timeout: 10s
 
-  # Labels ajoutés à toutes les métriques (utile pour distinguer les envs)
   external_labels:
     env: "dev"
     project: "valorisation-donnee-meteo"
@@ -28,4 +22,4 @@ scrape_configs:
         replacement: "backend-django"
   - job_name: "frontend"
     static_configs:
-      - targets: ["frontend:3000"]
+      - targets: ["frontend:3002"]

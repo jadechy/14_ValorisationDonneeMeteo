@@ -35,7 +35,7 @@ RUN chmod +x /entrypoint.sh
 # Stage 2 — Runtime
 # Image DHI distroless — pas de shell, surface d'attaque minimale
 # ══════════════════════════════════════════════════════════════
-FROM dhi.io/python:3.12-debian13 AS runtime
+FROM dhi.io/python:3.12-debian13-dev AS runtime
 
 WORKDIR /app
 
@@ -46,8 +46,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app /app
 COPY --from=builder /entrypoint.sh /entrypoint.sh
+COPY --from=builder /bin/uv /bin/uv
+COPY --from=builder /bin/uvx /bin/uvx
 
 EXPOSE 8000
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/app/.venv/bin/gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["/app/.venv/bin/gunicorn", "config.wsgi:application", \
+     "--bind", "0.0.0.0:8000", \
+     "--timeout", "120", \
+     "--workers", "2"]
