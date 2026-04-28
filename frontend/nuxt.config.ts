@@ -17,6 +17,7 @@ export default defineNuxtConfig({
         "@pinia/nuxt",
         "@primevue/nuxt-module",
         "nuxt-maplibre",
+        "@artmizu/nuxt-prometheus",
     ],
     maplibre: {
         css: false,
