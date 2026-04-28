@@ -2,7 +2,7 @@
 
 Projet Data For Good - Saison 14
 
-[![CI](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml/badge.svg)](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml)
+[![CI](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yml/badge.svg)](https://github.com/jadechy/14_ValorisationDonneeMeteo/actions/workflows/ci.yaml)
 
 ## Structure du projet
 
