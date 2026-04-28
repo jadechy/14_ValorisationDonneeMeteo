@@ -1,26 +1,30 @@
 {
-  "@context": "https://openvex.dev/ns/v0.2.0",
-  "@id": "https://github.com/jadechy/14_ValorisationDonneeMeteo/vex/vex-document-001",
-  "author": "jadechy",
-  "role": "Developer",
-  "timestamp": "2026-04-27T00:00:00Z",
-  "version": 1,
-  "statements": [
-    {
-      "vulnerability": {
-        "@id": "https://nvd.nist.gov/vuln/detail/CVE-XXXX-XXXX",
-        "name": "CVE-XXXX-XXXX",
-        "description": "Exemple : vulnérabilité dans une dépendance système de l'image de base"
-      },
-      "products": [
+    "@context": "https://openvex.dev/ns/v0.2.0",
+    "@id": "https://github.com/jadechy/14_ValorisationDonneeMeteo/vex-001",
+    "author": "jadechy",
+    "timestamp": "2026-04-28T00:00:00Z",
+    "version": 1,
+    "statements": [
         {
-          "@id": "pkg:docker/ghcr.io/jadechy/14_valorisationdonnee-meteo/backend:latest"
+            "vulnerability": { "name": "CVE-2026-33671" },
+            "products": [{ "@id": "pkg:npm/picomatch@2.3.2" }],
+            "status": "not_affected",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "impact_statement": "picomatch@2.3.2 est une dépendance transitive de chokidar via @primevue/nuxt-module, utilisé uniquement en dev pour le file watching. Non exposé en production."
+        },
+        {
+            "vulnerability": { "name": "CVE-2026-33672" },
+            "products": [{ "@id": "pkg:npm/picomatch@2.3.2" }],
+            "status": "not_affected",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "impact_statement": "picomatch@2.3.2 est une dépendance transitive de chokidar via @primevue/nuxt-module, utilisé uniquement en dev pour le file watching. Non exposé en production."
+        },
+        {
+            "vulnerability": { "name": "CVE-2026-33750" },
+            "products": [{ "@id": "pkg:npm/picomatch@2.3.2" }],
+            "status": "not_affected",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "impact_statement": "picomatch@2.3.2 est une dépendance transitive de chokidar via @primevue/nuxt-module, utilisé uniquement en dev pour le file watching. Non exposé en production."
         }
-      ],
-      "status": "not_affected",
-      "justification": "vulnerable_code_not_in_execute_path",
-      "impact_statement": "Ce composant vulnérable n'est pas appelé dans le chemin d'exécution de l'application. Il s'agit d'une dépendance de l'image de base non utilisée par notre code.",
-      "action_statement": "Aucune action requise. La CVE sera automatiquement résolue lors de la mise à jour de l'image de base."
-    }
-  ]
+    ]
 }
